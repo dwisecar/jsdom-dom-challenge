@@ -1,13 +1,15 @@
-let counter = document.getElementById("counter");
-let minusButton = document.getElementById("minus");
-let plusButton = document.getElementById("plus");
-let heartButton = document.getElementById("heart");
-let pauseButton = document.getElementById("pause");
+const counter = document.getElementById("counter");
+const minusButton = document.getElementById("minus");
+const plusButton = document.getElementById("plus");
+const heartButton = document.getElementById("heart");
+const pauseButton = document.getElementById("pause");
+const commentsList = document.getElementsByClassName("comments")[0];
+const submit = document.getElementById("submit")
 let counterPaused = false;
-let likeCount = 0;
+
 
 document.addEventListener("DOMContentLoaded", function() {
-    setInterval(incrementCounter, 10000);
+    setInterval(incrementCounter, 1000);
 })
 
 function incrementCounter() {
@@ -41,22 +43,38 @@ plusButton.addEventListener("click", function() {
     counter.textContent++;
 })
 
-function addLike() {
-    let currentNum = counter.textContent;
-    let currentNumLikes = {}
-    let likeUl = document.getElementsByClassName("likes")[0];
-    let likesList = likeUl.getElementsByTagName("li");
+let likes = {}
 
-    if (currentNumLikes.currentNum === undefined) {
-        currentNumLikes.currentNum = 1;
+function addLike() {
+    const currentNum = parseInt(counter.textContent);
+    const likeUl = document.getElementsByClassName("likes")[0];
+
+    if (likes[currentNum] === undefined) {
+        likes[currentNum] = 1;
+        const li = document.createElement("li");
+        li.setAttribute("id", `${currentNum}-counter`)
+        likeUl.appendChild(li);
+        li.innerHTML = `${currentNum} has ${likes[currentNum]} likes.`
     } else {
-        currentNumLikes.currentNum += 1;
+        likes[currentNum] += 1;
+        const existingLi = document.getElementById(`${currentNum}-counter`);
+        existingLi.innerHTML = `${currentNum} has ${likes[currentNum]} likes.`
     }
-    console.log(currentNum);
 }
 
 heartButton.addEventListener("click", function() {
-    likeCount += 1;
     addLike();
 })
+
+submit.addEventListener("click", function(event) {
+    event.preventDefault();
+    addComment();
+})
+
+function addComment() {
+    let comment = document.getElementById("comment-input").value;
+    let commentElement = document.createElement("p");
+    commentsList.appendChild(commentElement);
+    commentElement.textContent = comment;
+}
 
